@@ -15,10 +15,6 @@ export const schedule = (callback: any): void => {
 }
 
 const task = (pending: boolean) => {
-  console.log("______TASK______")
-  console.log(typeof MessageChannel)
-  console.log(typeof Promise)
-  console.log(pending)
   const cb = () => transitions.splice(0, 1).forEach(c => c())
   if (!pending && typeof Promise !== 'undefined') {
     console.log("RETURNING HERE")
@@ -30,25 +26,14 @@ const task = (pending: boolean) => {
     port1.onmessage = cb
     return () => port2.postMessage(null)
   }
-  console.log("RETURNING TIMEOUT")
   return () => cb()
 }
 
 let translate = task(false)
 
 const flush = (): void => {
-  console.log("______FLUSH____dfgdfg__")
-  console.log("A")
-  console.log(getTime())
-  console.log("B")
   deadline = getTime() + threshold
-  console.log("C")
-  console.log(deadline)
   let job = peek(queue)
-  console.log("D")
-  console.log(job)
-  console.log("E")
-  console.log(shouldYield())
   while (job && !shouldYield()) {
     const { callback } = job as any
     job.callback = null

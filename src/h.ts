@@ -2,13 +2,12 @@ import { isStr, arrayfy } from './reconcile'
 import { FreElement } from './type'
 
 // for jsx2
-export const h = (type, props: any, ...kids) => {
+export const h = (type, props: any, key : any, ...kids) => {
   props = props || {}
   kids = flat(arrayfy(props.children || kids))
 
   if (kids.length) props.children = kids.length === 1 ? kids[0] : kids
 
-  const key = props.key || null
   const ref = props.ref || null
 
   if (key) props.key = undefined
