@@ -52,8 +52,7 @@ export const update = (fiber?: IFiber) => {
 
 const reconcile = (WIP?: IFiber): boolean => {
   console.log("+++++RECONCILE+++++")
-  console.log(WIP)
-  console.log(JSON.stringify(WIP, null, 2))
+  //console.log(JSON.stringify(WIP, null, 2))
   while (WIP && !shouldYield()) WIP = capture(WIP)
   console.log("+++++RECONCILE+++2")
   console.log(WIP)

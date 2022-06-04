@@ -1,8 +1,11 @@
+// @ts-nocheck
+
 import { IFiber, IRef } from './type'
 import { updateElement } from './dom'
 import { isFn, LANE } from './reconcile'
 
 export const commit = (fiber: IFiber): void => {
+  console.log('__commit__')
   let e = fiber.e
   fiber.e = null
   do {
@@ -11,6 +14,12 @@ export const commit = (fiber: IFiber): void => {
 }
 
 const insert = (fiber: IFiber): void => {
+  console.log('__insert__')
+  console.log(fiber.lane)
+  console.log(fiber.lane === LANE.REMOVE)
+  console.log(fiber.lane === LANE.UPDATE)
+  console.log(fiber.lane === LANE.INSERT)
+  
   if (fiber.lane === LANE.REMOVE) {
     remove(fiber)
     return
@@ -19,7 +28,17 @@ const insert = (fiber: IFiber): void => {
     updateElement(fiber.node, fiber.oldProps || {}, fiber.props)
   }
   if (fiber.lane & LANE.INSERT) {
-    fiber.parentNode.insertBefore(fiber.node, fiber.after)
+    if (fiber.node.get_parent()) {
+      fiber.node.get_parent().remove_child(fiber.node)
+    }
+    if (fiber.after) {
+      console.log('__insert before__')
+      fiber.parentNode.move_child(fiber.node, Math.max(0, fiber.after.get_index() - 1))
+    } else {
+      console.log('__insertting__')
+      fiber.parentNode.add_child(fiber.node, true)
+      console.log('__inserted__')
+    }
   }
   refer(fiber.ref, fiber.node)
 }
@@ -37,6 +56,7 @@ const kidsRefer = (kids: any): void => {
 }
 
 const remove = d => {
+  console.log('__remove__')
   if (d.isComp) {
     d.hooks && d.hooks.list.forEach(e => e[2] && e[2]())
     d.kids.forEach(remove)
