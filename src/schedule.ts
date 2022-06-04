@@ -15,24 +15,40 @@ export const schedule = (callback: any): void => {
 }
 
 const task = (pending: boolean) => {
+  console.log("______TASK______")
+  console.log(typeof MessageChannel)
+  console.log(typeof Promise)
+  console.log(pending)
   const cb = () => transitions.splice(0, 1).forEach(c => c())
   if (!pending && typeof Promise !== 'undefined') {
+    console.log("RETURNING HERE")
     // Todo queueMicrotask
-    return () => queueMicrotask(cb)
+    return () => Promise.resolve().then(cb)
   }
   if (typeof MessageChannel !== 'undefined') {
     const { port1, port2 } = new MessageChannel()
     port1.onmessage = cb
     return () => port2.postMessage(null)
   }
-  return () => setTimeout(cb)
+  console.log("RETURNING TIMEOUT")
+  return () => cb()
 }
 
 let translate = task(false)
 
 const flush = (): void => {
+  console.log("______FLUSH____dfgdfg__")
+  console.log("A")
+  console.log(getTime())
+  console.log("B")
   deadline = getTime() + threshold
+  console.log("C")
+  console.log(deadline)
   let job = peek(queue)
+  console.log("D")
+  console.log(job)
+  console.log("E")
+  console.log(shouldYield())
   while (job && !shouldYield()) {
     const { callback } = job as any
     job.callback = null
@@ -48,9 +64,9 @@ const flush = (): void => {
 }
 
 export const shouldYield = (): boolean => {
-  return getTime() >= deadline
+  return false//getTime() >= deadline
 }
-
-export const getTime = () => performance.now()
+// @ts-ignore
+export const getTime = () => godot.OS.get_ticks_msec() 
 
 const peek = (queue: ITask[]) => queue[0]

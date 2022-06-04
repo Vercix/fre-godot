@@ -64,6 +64,5 @@
   },
   "repository": "yisar/fre",
   "homepage": "https://fre.js.org",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

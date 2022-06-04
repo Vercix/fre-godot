@@ -13,6 +13,7 @@ import { schedule, shouldYield } from './schedule'
 import { isArr, createText } from './h'
 import { commit } from './commit'
 
+
 let currentFiber: IFiber
 let finish = null
 let effect = null
@@ -28,6 +29,7 @@ export const enum LANE {
 }
 
 export const render = (vnode: FreElement, node: Node): void => {
+  console.log("_INTO RENDER__")
   const rootFiber = {
     node,
     props: { children: vnode },
@@ -36,9 +38,12 @@ export const render = (vnode: FreElement, node: Node): void => {
 }
 
 export const update = (fiber?: IFiber) => {
+  console.log(fiber.node)
+
   if (fiber && !(fiber.lane & LANE.DIRTY)) {
     fiber.lane = LANE.UPDATE | LANE.DIRTY
     schedule(() => {
+      console.log("SCHEDULE?")
       effect = fiber
       return reconcile(fiber)
     })
@@ -46,18 +51,30 @@ export const update = (fiber?: IFiber) => {
 }
 
 const reconcile = (WIP?: IFiber): boolean => {
+  console.log("+++++RECONCILE+++++")
+  console.log(WIP)
+  console.log(JSON.stringify(WIP, null, 2))
   while (WIP && !shouldYield()) WIP = capture(WIP)
+  console.log("+++++RECONCILE+++2")
+  console.log(WIP)
   if (WIP) return reconcile.bind(null, WIP)
+  console.log("+++++RECONCILE+++3")
   if (finish) {
     commit(finish)
     finish = null
   }
+  console.log("+++++RECONCILE+++4")
   return null
 }
 
 const capture = (WIP: IFiber): IFiber | undefined => {
+  console.log("^^^^^Capture^^^^^")
+  console.log(WIP.type)
   WIP.isComp = isFn(WIP.type)
+  console.log(WIP.isComp)
   WIP.isComp ? updateHook(WIP) : updateHost(WIP)
+  console.log(WIP.child)
+  console.log("______________________")
   if (WIP.child) return WIP.child
   while (WIP) {
     bubble(WIP)
@@ -72,6 +89,7 @@ const capture = (WIP: IFiber): IFiber | undefined => {
 }
 
 const bubble = WIP => {
+  console.log("^^^^^Bubble^^^^^")
   if (WIP.isComp) {
     if (WIP.hooks) {
       side(WIP.hooks.layout)
@@ -96,6 +114,7 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
 }
 
 const updateHost = (WIP: IFiber): void => {
+  console.log("!!!!!!!!!!UPDATE HOST!!!!!!!!!!!!!!!!")
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
     if (WIP.type === 'svg') WIP.lane |= LANE.SVG
