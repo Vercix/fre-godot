@@ -12,16 +12,23 @@ const tagMap = {
    'margincontainer': godot.MarginContainer,
    'tabcontainer': godot.TabContainer,
    'gridcontainer': godot.GridContainer,
+   'scrollcontainer': godot.ScrollContainer,
+
+   //buttons
+   'button': godot.Button,
+   'optionbutton': godot.OptionButton,
+   'menubutton': godot.MenuButton,
+   'optionbutton': godot.OptionButton,
+   'linkbutton': godot.LinkButton,
 
    //widgets
-   'button': godot.Button,
-   'linkbutton': godot.LinkButton,
    'textedit': godot.TextEdit,
    'lineedit': godot.LineEdit,
    'progressbar': godot.ProgressBar,
    'spinbox': godot.SpinBox,
    'hslider': godot.HSlider,
    'vslider': godot.VSlider,
+   'colorpicker': godot.ColorPicker,
 
    //seperators
    'hseperator': godot.HSeparator,
