@@ -18,7 +18,6 @@ const tagMap = {
    'button': godot.Button,
    'optionbutton': godot.OptionButton,
    'menubutton': godot.MenuButton,
-   'optionbutton': godot.OptionButton,
    'linkbutton': godot.LinkButton,
 
    //widgets
