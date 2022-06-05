@@ -32,8 +32,8 @@ export const updateElement = <P extends Attributes>(
           ; (dom as any)[name][styleKey] = bStyle || ''
         }
       })
-    } else if (name[0] === 'o' && name[1] === 'n') {
-      name = name.slice(2).toLowerCase() as Extract<keyof P, string>
+    } else if (name[0] === 'o' && name[1] === 'n' && name[2] === '_') {
+      name = name.slice(3).toLowerCase() as Extract<keyof P, string>
       if (a) dom.disconnect(name, a)
       dom.connect(name, b);
     }
