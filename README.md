@@ -3,7 +3,7 @@
 ## About
 <br>
 
-This is a fork of Fre, a small concurrent ui library, adapted for the Godot engine with javascript bindings.
+This is a fork of<a href="https://github.com/yisar/fre"> Fre</a>, a small concurrent ui library, adapted for the Godot engine with<a href="https://github.com/GodotExplorer/ECMAScript"> javascript bindings</a>.
 
 ## Use
 
