@@ -14,7 +14,7 @@ import { render } from "./fre-godot";
 import App from './path/to/App'
 
 export default class GodotFreApp extends godot.Control {
-    
+
 	constructor() {
 		super();	
 	}
@@ -42,8 +42,6 @@ function App() {
     </>
   )
 }
-
-render(<App/>, document.body)
 ```
 
 <br>
