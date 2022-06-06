@@ -35,13 +35,21 @@ const tagMap = {
 }
 
 
-function factory(tag, anchor = null) {
+function factory(tag, anchor = null, size = null) {
    //create a new godot node
    const newDom = new tagMap[tag]()
    
    //we handle styling
    if (anchor) {
       newDom.set_anchors_preset(anchor)
+   }
+   if (size) {
+      if(typeof size.width === 'number') {
+         newDom.set_h_size_flags(size.width)
+      }
+      if(typeof size.height === 'number') {
+         newDom.set_v_size_flags(size.height)
+      }
    }
 
    return newDom;

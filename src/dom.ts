@@ -59,7 +59,7 @@ export const createElement = <P = Attributes>(fiber: IFiber) => {
   //         fiber.type as string
   //       )
   //     : document.createElement(fiber.type as string)
-  const dom = factory(fiber.type, fiber?.props?.anchor)
+  const dom = factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   updateElement(dom as DOM, {} as P, fiber.props as P)
   return dom
 }
