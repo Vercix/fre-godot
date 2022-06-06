@@ -10,7 +10,7 @@ This is a fork of Fre, a small concurrent ui library, adapted for the Godot engi
 The godot control:
 
 ```js
-import { render } from "./fre-godot";
+import { render } from "fre-godot";
 import App from './path/to/App'
 
 export default class GodotFreApp extends godot.Control {
@@ -30,7 +30,7 @@ The component
 
 ```js
 //App.jsx
-import { render, useState, render } from 'fre-godot'
+import { render, useState } from 'fre-godot'
 
 function App() {
   const [count, setCount] = useState(0)
