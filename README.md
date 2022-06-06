@@ -5,7 +5,10 @@
 
 This is a fork of<a href="https://github.com/yisar/fre"> Fre</a>, a small concurrent ui library, adapted for the Godot engine with<a href="https://github.com/GodotExplorer/ECMAScript"> javascript bindings</a>.
 
+<br>
+
 ## Use
+<br>
 
 The godot control:
 
@@ -47,13 +50,10 @@ function App() {
 <br>
 
 ## Godot Signals
-
 <br>
 
 Godot signals are the equivalent of dom event listeners.
-They use snake case naming convention. 
-
-<br>
+They use snake case naming convention.
 
 Use the following:
 
