@@ -29,7 +29,7 @@ export const updateElement = <P extends Attributes>(
     } else if (name === 'style' && !isStr(b)) {
       jointIter(a, b, (styleKey, aStyle, bStyle) => {
         if (aStyle !== bStyle) {
-          ; (dom as any)[name][styleKey] = bStyle || ''
+          dom.set(styleKey, bStyle)
         }
       })
     } else if (name[0] === 'o' && name[1] === 'n' && name[2] === '_') {
