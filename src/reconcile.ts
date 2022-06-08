@@ -66,9 +66,11 @@ const capture = (WIP: IFiber): IFiber | undefined => {
   WIP.isNode = isNode(WIP.type)
   if (WIP.isNode) {
     WIP.isComp = false;
+    updateNode(WIP)
+  }else{
+    WIP.isComp  ? updateHook(WIP) : updateHost(WIP)
   }
 
-  WIP.isComp  ? updateHook(WIP) : updateHost(WIP)
   if (WIP.child) return WIP.child
   while (WIP) {
     bubble(WIP)
@@ -109,11 +111,25 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
 const updateNode = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
-    if (WIP.type === 'svg') WIP.lane |= LANE.SVG
     WIP.node = createElement(WIP) as GodotElementEx
   }
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
-  diffKids(WIP, WIP.props.children)
+  console.log('_____________NODE CHILDREN________________')
+  // @ts-ignore
+  console.log(WIP.node._render)
+  // @ts-ignore
+  console.log(WIP.node._render())
+  // @ts-ignore
+  console.log(WIP.node._render().type)
+  console.log(WIP.props?.children)
+  console.log(WIP.props?.children?.[0].type)
+  
+  // @ts-ignore
+  WIP.node.children = WIP.props.children
+  console.log(WIP.node.get_children())
+  // @ts-ignore
+  diffKids(WIP, WIP.node._render())
+  console.log('_____________________________')
 }
 
 const updateHost = (WIP: IFiber): void => {
@@ -131,7 +147,7 @@ const simpleVnode = (type: any) =>
 
 const getParentNode = (WIP: IFiber): GodotElement | undefined => {
   while ((WIP = WIP.parent)) {
-    if (!WIP.isComp) return WIP.node
+    if (!WIP.isComp && !WIP.isNode) return WIP.node
   }
 }
 
