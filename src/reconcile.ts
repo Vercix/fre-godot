@@ -113,7 +113,6 @@ const updateNode = (WIP: IFiber): void => {
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
   }
-  WIP.childNodes = Array.from(WIP.node.get_children() || [])
   console.log('_____________NODE CHILDREN________________')
   // @ts-ignore
   console.log(WIP.node._render)
@@ -127,8 +126,27 @@ const updateNode = (WIP: IFiber): void => {
   // @ts-ignore
   WIP.node.children = WIP.props.children
   console.log(WIP.node.get_children())
+  
   // @ts-ignore
-  diffKids(WIP, WIP.node._render())
+  const renderChildren = arrayfy(WIP.node._render())
+  console.log(Array.isArray(renderChildren))
+  console.log(renderChildren)
+  console.log(renderChildren[0])
+  console.log(renderChildren[0].type)
+  console.log('**************')
+  if(renderChildren?.[0].type){
+    console.log(renderChildren[0].parent)
+    renderChildren[0].parent = WIP
+    console.log(WIP.node)
+    console.log(renderChildren[0].parent)
+    console.log('@@@@@@@@@@@@@@@')
+  }
+
+  WIP.childNodes = Array.from(WIP.node.get_children() || [])
+  
+
+  // @ts-ignore
+  diffKids(WIP, renderChildren)
   console.log('_____________________________')
 }
 
@@ -147,7 +165,7 @@ const simpleVnode = (type: any) =>
 
 const getParentNode = (WIP: IFiber): GodotElement | undefined => {
   while ((WIP = WIP.parent)) {
-    if (!WIP.isComp && !WIP.isNode) return WIP.node
+    if (!WIP.isComp) return WIP.node
   }
 }
 
@@ -189,6 +207,7 @@ const diffKids = (WIP: any, children: FreNode): void => {
       bIndex++
     } else if (op === LANE.INSERT) {
       //here the index of current fiber is checked
+      console.log('HERE')
 
       let c = bCh[bIndex]
       mIndex = c.key != null ? keymap[c.key] : null
