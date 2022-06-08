@@ -37,7 +37,17 @@ const tagMap = {
 
 function factory(tag, anchor = null, size = null) {
    //create a new godot node
+   console.log('here')
+   console.log(tag)
+   console.log('^^^^^^^^^^^^^^^')
+
+   if(tag instanceof godot.Control){
+      throw new Error('its a control class')
+   }
+   
    const newDom = new tagMap[tag]()
+
+
    
    //we handle styling
    if (anchor) {

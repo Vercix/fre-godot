@@ -41,7 +41,7 @@ export type IRef = (
 
 export interface IFiber<P extends Attributes = any> {
   key?: string
-  type: string | FC<P>
+  type: string | FC<P> | any
   parentNode: HTMLElementEx
   childNodes: any
   node: HTMLElementEx
@@ -63,6 +63,7 @@ export interface IFiber<P extends Attributes = any> {
   laziness: any[]
   dirty: boolean
   isComp: boolean
+  isNode: boolean
   walker: any
 }
 

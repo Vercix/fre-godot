@@ -61,8 +61,17 @@ const reconcile = (WIP?: IFiber): boolean => {
 }
 
 const capture = (WIP: IFiber): IFiber | undefined => {
+  console.log('---capture---')
+  console.log(WIP.type)
   WIP.isComp = isFn(WIP.type)
-  WIP.isComp ? updateHook(WIP) : updateHost(WIP)
+  WIP.isNode = isNode(WIP.type)
+  if (WIP.isNode) {
+    WIP.isComp = false;
+    console.log(new WIP.type())
+  }
+  console.log('%%%%%%%%%%%%%%')
+
+  WIP.isComp  ? updateHook(WIP) : updateHost(WIP)
   if (WIP.child) return WIP.child
   while (WIP) {
     bubble(WIP)
@@ -121,26 +130,26 @@ const getParentNode = (WIP: IFiber): HTMLElement | undefined => {
 
 const diffKids = (WIP: any, children: FreNode): void => {
   let aCh = WIP.kids || [],
-  bCh = (WIP.kids = arrayfy(children) as any),
-  aHead = 0,
-  bHead = 0,
-  aTail = aCh.length - 1,
-  bTail = bCh.length - 1
-  
+    bCh = (WIP.kids = arrayfy(children) as any),
+    aHead = 0,
+    bHead = 0,
+    aTail = aCh.length - 1,
+    bTail = bCh.length - 1
+
   while (aHead <= aTail && bHead <= bTail) {
     if (!same(aCh[aHead], bCh[bHead])) break
     clone(aCh[aHead++], bCh[bHead++], LANE.UPDATE)
   }
-  
+
   while (aHead <= aTail && bHead <= bTail) {
     if (!same(aCh[aTail], bCh[bTail])) break
     clone(aCh[aTail--], bCh[bTail--], LANE.UPDATE)
   }
-  
+
   // LCS
   const { diff, keymap } = lcs(bCh, aCh, bHead, bTail, aHead, aTail)
   let len = diff.length
-  
+
   for (let i = 0, aIndex = aHead, bIndex = bHead, mIndex; i < len; i++) {
     const op = diff[i]
     if (op === LANE.UPDATE) {
@@ -152,7 +161,7 @@ const diffKids = (WIP: any, children: FreNode): void => {
       } else {
         clone(aCh[aIndex], bCh[bIndex], LANE.UPDATE)
       }
-      
+
       aIndex++
       bIndex++
     } else if (op === LANE.INSERT) {
@@ -323,5 +332,6 @@ function bs(ktr, j) {
 
 export const getCurrentFiber = () => currentFiber || null
 export const isFn = (x: any): x is Function => typeof x === 'function'
+export const isNode = (x: any) => typeof x === 'function' && /^\s*class\s+/.test(x.toString());
 export const isStr = (s: any): s is number | string =>
   typeof s === 'number' || typeof s === 'string'
