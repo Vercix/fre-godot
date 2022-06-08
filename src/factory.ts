@@ -1,4 +1,5 @@
-// @ts-nocheck
+import { GodotElement } from "./type"
+
 
 const tagMap = {
    'control': godot.Control,
@@ -35,26 +36,22 @@ const tagMap = {
 }
 
 
-function factory(tag, anchor = null, size = null) {
+
+
+function factory(tag: string, anchor : godot.Control.LayoutPreset = null, size = null) : GodotElement {
    //create a new godot node
 
-   if(tag instanceof godot.Control){
-      throw new Error('its a control class')
-   }
-   
-   const newDom = new tagMap[tag]()
+   const newDom: GodotElement = new tagMap[tag]()
 
-
-   
    //we handle styling
    if (anchor) {
       newDom.set_anchors_preset(anchor)
    }
    if (size) {
-      if(typeof size.width === 'number') {
+      if (typeof size.width === 'number') {
          newDom.set_h_size_flags(size.width)
       }
-      if(typeof size.height === 'number') {
+      if (typeof size.height === 'number') {
          newDom.set_v_size_flags(size.height)
       }
    }

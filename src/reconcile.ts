@@ -1,12 +1,11 @@
-// @ts-nocheck
-
 
 import {
   IFiber,
   FreElement,
   FC,
   Attributes,
-  HTMLElementEx,
+  GodotElement,
+  GodotElementEx,
   FreNode,
   IEffect,
 } from './type'
@@ -31,7 +30,7 @@ export const enum LANE {
   NOWORK = 1 << 7,
 }
 
-export const render = (vnode: FreElement, node: Node): void => {
+export const render = (vnode: FreElement, node: GodotElement): void => {
   const rootFiber = {
     node,
     props: { children: vnode },
@@ -61,15 +60,13 @@ const reconcile = (WIP?: IFiber): boolean => {
 }
 
 const capture = (WIP: IFiber): IFiber | undefined => {
-  console.log('---capture---')
-  console.log(WIP.type)
   WIP.isComp = isFn(WIP.type)
+
+  // @TODO fix this. needed for class implementation for now
   WIP.isNode = isNode(WIP.type)
   if (WIP.isNode) {
     WIP.isComp = false;
-    console.log(new WIP.type())
   }
-  console.log('%%%%%%%%%%%%%%')
 
   WIP.isComp  ? updateHook(WIP) : updateHost(WIP)
   if (WIP.child) return WIP.child
@@ -109,11 +106,21 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
   diffKids(WIP, simpleVnode(children))
 }
 
+const updateNode = (WIP: IFiber): void => {
+  WIP.parentNode = (getParentNode(WIP) as any) || {}
+  if (!WIP.node) {
+    if (WIP.type === 'svg') WIP.lane |= LANE.SVG
+    WIP.node = createElement(WIP) as GodotElementEx
+  }
+  WIP.childNodes = Array.from(WIP.node.get_children() || [])
+  diffKids(WIP, WIP.props.children)
+}
+
 const updateHost = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
     if (WIP.type === 'svg') WIP.lane |= LANE.SVG
-    WIP.node = createElement(WIP) as HTMLElementEx
+    WIP.node = createElement(WIP) as GodotElementEx
   }
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
   diffKids(WIP, WIP.props.children)
@@ -122,7 +129,7 @@ const updateHost = (WIP: IFiber): void => {
 const simpleVnode = (type: any) =>
   isStr(type) ? createText(type as string) : type
 
-const getParentNode = (WIP: IFiber): HTMLElement | undefined => {
+const getParentNode = (WIP: IFiber): GodotElement | undefined => {
   while ((WIP = WIP.parent)) {
     if (!WIP.isComp) return WIP.node
   }
@@ -165,6 +172,8 @@ const diffKids = (WIP: any, children: FreNode): void => {
       aIndex++
       bIndex++
     } else if (op === LANE.INSERT) {
+      //here the index of current fiber is checked
+
       let c = bCh[bIndex]
       mIndex = c.key != null ? keymap[c.key] : null
       if (mIndex != null) {

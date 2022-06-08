@@ -36,15 +36,15 @@ export interface IHook {
 }
 
 export type IRef = (
-  e: HTMLElement | undefined
-) => void | { current?: HTMLElement }
+  e: GodotElement | undefined
+) => void | { current?: GodotElement }
 
 export interface IFiber<P extends Attributes = any> {
   key?: string
   type: string | FC<P> | any
-  parentNode: HTMLElementEx
+  parentNode: GodotElementEx
   childNodes: any
-  node: HTMLElementEx
+  node: GodotElementEx
   kids?: any
   parent?: IFiber<P>
   sibling?: IFiber<P>
@@ -67,7 +67,8 @@ export interface IFiber<P extends Attributes = any> {
   walker: any
 }
 
-export type HTMLElementEx = HTMLElement & { last: IFiber | null }
+export type GodotElement = godot.Control
+export type GodotElementEx = GodotElement & { last: IFiber | null }
 export type IEffect = [Function?, number?, Function?]
 
 export type FreText = string | number
@@ -96,4 +97,4 @@ export interface ITask {
   fiber: IFiber
 }
 
-export type DOM = HTMLElement | SVGElement
+export type DOM = GodotElement | SVGElement

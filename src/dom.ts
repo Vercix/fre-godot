@@ -1,4 +1,4 @@
-import { Attributes, DOM, IFiber } from './type'
+import { Attributes, DOM, IFiber, GodotElement } from './type'
 import { isStr, LANE } from './reconcile'
 
 //godot
@@ -59,7 +59,7 @@ export const createElement = <P = Attributes>(fiber: IFiber) => {
   //         fiber.type as string
   //       )
   //     : document.createElement(fiber.type as string)
-  const dom = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
+  const dom : GodotElement = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   updateElement(dom as DOM, {} as P, fiber.props as P)
   return dom
 }
