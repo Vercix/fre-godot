@@ -2,13 +2,14 @@ import { isStr, arrayfy } from './reconcile'
 import { FreElement } from './type'
 
 // for jsx2
-export const h = (type, props: any, key : any, ...kids) => {
+export const h = (type, props: any, ...kids) => {
   props = props || {}
   kids = flat(arrayfy(props.children || kids))
 
   if (kids.length) props.children = kids.length === 1 ? kids[0] : kids
 
   const ref = props.ref || null
+  const key = props.key || null
 
   if (key) props.key = undefined
   if (ref) props.ref = undefined
@@ -41,7 +42,7 @@ export function Fragment(props) {
   return props.children
 }
 
-export function memo(fn){
+export function memo(fn) {
   fn.memo = true
   return fn
 }
