@@ -113,41 +113,20 @@ const updateNode = (WIP: IFiber): void => {
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
   }
-  console.log('_____________NODE CHILDREN________________')
-  // @ts-ignore
-  console.log(WIP.node._render)
-  // @ts-ignore
-  console.log(WIP.node._render())
-  // @ts-ignore
-  console.log(WIP.node._render().type)
-  console.log(WIP.props?.children)
-  console.log(WIP.props?.children?.[0].type)
   
   // @ts-ignore
   WIP.node.children = WIP.props.children
-  console.log(WIP.node.get_children())
   
   // @ts-ignore
   const renderChildren = arrayfy(WIP.node._render())
-  console.log(Array.isArray(renderChildren))
-  console.log(renderChildren)
-  console.log(renderChildren[0])
-  console.log(renderChildren[0].type)
-  console.log('**************')
   if(renderChildren?.[0].type){
-    console.log(renderChildren[0].parent)
     renderChildren[0].parent = WIP
-    console.log(WIP.node)
-    console.log(renderChildren[0].parent)
-    console.log('@@@@@@@@@@@@@@@')
   }
 
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
-  
 
   // @ts-ignore
   diffKids(WIP, renderChildren)
-  console.log('_____________________________')
 }
 
 const updateHost = (WIP: IFiber): void => {
@@ -207,8 +186,7 @@ const diffKids = (WIP: any, children: FreNode): void => {
       bIndex++
     } else if (op === LANE.INSERT) {
       //here the index of current fiber is checked
-      console.log('HERE')
-
+      
       let c = bCh[bIndex]
       mIndex = c.key != null ? keymap[c.key] : null
       if (mIndex != null) {
