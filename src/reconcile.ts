@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import {
   IFiber,
   FreElement,
@@ -67,8 +67,8 @@ const capture = (WIP: IFiber): IFiber | undefined => {
   if (WIP.isNode) {
     WIP.isComp = false;
     updateNode(WIP)
-  }else{
-    WIP.isComp  ? updateHook(WIP) : updateHost(WIP)
+  } else {
+    WIP.isComp ? updateHook(WIP) : updateHost(WIP)
   }
 
   if (WIP.child) return WIP.child
@@ -110,35 +110,39 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
 
 const updateNode = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
+
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
     // @ts-ignore
     WIP.node.fiber = WIP
-    WIP.node.fiber = WIP
+    // @ts-ignore
+    console.log(WIP.props.children)
+    // @ts-ignore
+    WIP.node.children = WIP.props.children
+    // @ts-ignore
+    const renderChildren = arrayfy(WIP.node._render())
+    
+    if (renderChildren?.[0].type) {
+      renderChildren[0].parent = WIP
+    }
+    
+    diffKids(WIP, renderChildren)
+    
+    WIP.props.children = renderChildren;
+    return
   }
   
   // @ts-ignore
-  //WIP.node.children = WIP.props.children
-  
+  WIP.node.fiber = WIP
   // @ts-ignore
-  const renderChildren = arrayfy(WIP.node._render())
-  if(renderChildren?.[0].type){
-    renderChildren[0].parent = WIP
-  }
-  
+  WIP.node.children = WIP.props.children
   // @ts-ignore
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
-  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
-  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
   // @ts-ignore
-  console.log(WIP.node.fiber)
-  // @ts-ignore
-  console.log(renderChildren[0].type)
-  console.log(WIP.childNodes)
-  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
-  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
-  
-  // @ts-ignore
+  const renderChildren = arrayfy(WIP.node._render())
+  if (renderChildren?.[0].type) {
+    renderChildren[0].parent = WIP
+  }
   diffKids(WIP, renderChildren)
 }
 
@@ -199,7 +203,7 @@ const diffKids = (WIP: any, children: FreNode): void => {
       bIndex++
     } else if (op === LANE.INSERT) {
       //here the index of current fiber is checked
-      
+
       let c = bCh[bIndex]
       mIndex = c.key != null ? keymap[c.key] : null
       if (mIndex != null) {
