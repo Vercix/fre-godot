@@ -113,36 +113,20 @@ const updateNode = (WIP: IFiber): void => {
 
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
-    // @ts-ignore
-    WIP.node.fiber = WIP
-    // @ts-ignore
-    console.log(WIP.props.children)
-    // @ts-ignore
-    WIP.node.children = WIP.props.children
-    // @ts-ignore
-    const renderChildren = arrayfy(WIP.node._render())
-    
-    if (renderChildren?.[0].type) {
-      renderChildren[0].parent = WIP
-    }
-    
-    diffKids(WIP, renderChildren)
-    
-    WIP.props.children = renderChildren;
-    return
   }
-  
-  // @ts-ignore
+
   WIP.node.fiber = WIP
-  // @ts-ignore
+
+  console.log(WIP.props.children)
+
   WIP.node.children = WIP.props.children
-  // @ts-ignore
-  WIP.childNodes = Array.from(WIP.node.get_children() || [])
-  // @ts-ignore
+
   const renderChildren = arrayfy(WIP.node._render())
+
   if (renderChildren?.[0].type) {
     renderChildren[0].parent = WIP
   }
+
   diffKids(WIP, renderChildren)
 }
 
