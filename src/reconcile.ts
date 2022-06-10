@@ -112,19 +112,32 @@ const updateNode = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
+    // @ts-ignore
+    WIP.node.fiber = WIP
+    WIP.node.fiber = WIP
   }
   
   // @ts-ignore
-  WIP.node.children = WIP.props.children
+  //WIP.node.children = WIP.props.children
   
   // @ts-ignore
   const renderChildren = arrayfy(WIP.node._render())
   if(renderChildren?.[0].type){
     renderChildren[0].parent = WIP
   }
-
+  
+  // @ts-ignore
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
-
+  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
+  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
+  // @ts-ignore
+  console.log(WIP.node.fiber)
+  // @ts-ignore
+  console.log(renderChildren[0].type)
+  console.log(WIP.childNodes)
+  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
+  console.log('+++++++++++++++++++++++++++++++++++++++++++=')
+  
   // @ts-ignore
   diffKids(WIP, renderChildren)
 }
@@ -132,9 +145,9 @@ const updateNode = (WIP: IFiber): void => {
 const updateHost = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
-    if (WIP.type === 'svg') WIP.lane |= LANE.SVG
     WIP.node = createElement(WIP) as GodotElementEx
   }
+  // @ts-ignore
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
   diffKids(WIP, WIP.props.children)
 }

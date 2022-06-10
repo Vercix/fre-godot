@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Attributes, DOM, IFiber, GodotElement } from './type'
 import { isStr, LANE } from './reconcile'
 

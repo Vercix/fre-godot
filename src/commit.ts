@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 
 import { IFiber, IRef, GodotElement } from './type'
 import { updateElement } from './dom'

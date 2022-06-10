@@ -67,7 +67,7 @@ export interface IFiber<P extends Attributes = any> {
   walker: any
 }
 
-export type GodotElement = godot.Control
+export type GodotElement = {}
 export type GodotElementEx = GodotElement & { last: IFiber | null }
 export type IEffect = [Function?, number?, Function?]
 

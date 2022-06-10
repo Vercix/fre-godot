@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { GodotElement } from "./type"
 
 
@@ -38,7 +39,7 @@ const tagMap = {
 
 
 
-function factory(tag: string, anchor : godot.Control.LayoutPreset = null, size = null) : GodotElement {
+function factory(tag: string, anchor : number = null, size = null) : GodotElement {
    //create a new godot node
 
    const newDom: GodotElement = new tagMap[tag]()

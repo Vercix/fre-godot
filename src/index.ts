@@ -1,5 +1,5 @@
 export { h, Fragment, h as createElement, memo } from './h'
-export { render } from './reconcile'
+export { render, update } from './reconcile'
 export {
   useState,
   useReducer,
