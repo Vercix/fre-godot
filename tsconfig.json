@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "sourceMap": false,
+    "sourceMap": true,
     "declaration": true,
     "declarationDir": "dist/types/",
     "jsx": "react",

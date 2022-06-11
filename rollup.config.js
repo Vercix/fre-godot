@@ -8,9 +8,6 @@ const plugins = [
     removeComments: true,
     useTsconfigDeclarationDir: true,
   }),
-  terser({
-    include: ['fre.js'],
-  }),
   size()
 ]
 

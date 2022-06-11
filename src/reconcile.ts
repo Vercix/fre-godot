@@ -108,27 +108,45 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
   diffKids(WIP, simpleVnode(children))
 }
 
+
+
+
+
+
+
 const updateNode = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
-
+  var firstRender = false
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
-  }
+    firstRender = true;
+    // const renderChildren = arrayfy(WIP.node._render())
+    // if (renderChildren?.[0].type) {
+      //   renderChildren[0].parent = WIP
+      //   console.log(renderChildren)
+      // }
+      // WIP.node.renderChildren = renderChildren
+      // WIP.props.children = renderChildren
+    }
+    WIP.node.fiber = WIP
+  
+  
+  const AAAA = WIP.node._render()
+  let vnode = simpleVnode(AAAA)
+  vnode.parent = WIP
+  console.log(vnode)
 
-  WIP.node.fiber = WIP
-
-  console.log(WIP.props.children)
-
-  WIP.node.children = WIP.props.children
-
-  const renderChildren = arrayfy(WIP.node._render())
-
-  if (renderChildren?.[0].type) {
-    renderChildren[0].parent = WIP
-  }
-
-  diffKids(WIP, renderChildren)
+  // console.log(renderChildren)
+  //WIP.props.children = renderChildren
+  WIP.childNodes = Array.from(WIP.node.get_children() || [])
+  //if (!firstRender) throw new Error('renderChildren')
+  diffKids(WIP, vnode)
 }
+
+
+
+
+
 
 const updateHost = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}

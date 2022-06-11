@@ -36,13 +36,19 @@ export const updateElement = <P extends Attributes>(
       })
     } else if (name[0] === 'o' && name[1] === 'n' && name[2] === '_') {
       name = name.slice(3).toLowerCase() as Extract<keyof P, string>
-      if (a) dom.disconnect(name, a)
+      if (a) {
+        console.log('________________________')
+        console.log(a, name)
+        console.log(typeof name)
+        console.log(typeof a)
+        console.log(dom)
+        console.log('________________________')
+        //console.log(dom.is_connected(name, dom, a))
+        dom.disconnect(name,  a)
+        console.log('************************')
+      }
       dom.connect(name, b);
     }
-    // else if (name in dom && !(dom instanceof SVGElement)) {
-    //   console.log('2')
-    //     ; (dom as any)[name] = b || ''
-    // }
     else if (b == null || b === false) {
       //dom.removeAttribute(name)
     } else {
