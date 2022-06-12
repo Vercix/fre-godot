@@ -141,8 +141,13 @@ const updateNode = (WIP: IFiber): void => {
 
   // console.log(renderChildren)
   //WIP.props.children = vnode
-  //WIP.childNodes = Array.from(WIP.node.get_children() || [])
+  //WIP.childNodes = Array.from(WIP.node.get_children() || []
+  
+  console.log('_____________DIFF KIDS__________________')
   diffKids(WIP, vnode)
+  console.log('update',LANE.UPDATE)
+  console.log('insert', LANE.INSERT)
+  console.log('remove',LANE.REMOVE)
   if (!firstRender) throw new Error('renderChildren')
 }
 
@@ -189,18 +194,25 @@ const diffKids = (WIP: any, children: FreNode): void => {
   }
 
   // LCS
+  console.log('(((((((')
+  console.log(aCh)
+  console.log(bCh)
   const { diff, keymap } = lcs(bCh, aCh, bHead, bTail, aHead, aTail)
   let len = diff.length
+  console.log(diff)
 
   for (let i = 0, aIndex = aHead, bIndex = bHead, mIndex; i < len; i++) {
     const op = diff[i]
+    console.log('op', op)
     if (op === LANE.UPDATE) {
       if (!same(aCh[aIndex], bCh[bIndex])) {
+        console.log('insert ^^ remove')
         bCh[bIndex].lane = LANE.INSERT
         aCh[aIndex].lane = LANE.REMOVE
         effect.e = aCh[aIndex]
         effect = aCh[aIndex]
       } else {
+        console.log('clone')
         clone(aCh[aIndex], bCh[bIndex], LANE.UPDATE)
       }
 
@@ -296,6 +308,9 @@ function lcs(
   let newLen = bArr.length
   let oldLen = aArr.length
   let minLen = Math.min(newLen, oldLen)
+  console.log(minLen) 
+  console.log(bArr) 
+  console.log(aArr) 
   let tresh = Array(minLen + 1)
   tresh[0] = -1
 
@@ -331,6 +346,7 @@ function lcs(
 
   let ptr = link[k]
   let diff = Array(oldLen + newLen - k)
+  console.log(oldLen + newLen - k)
   let curNewi = bTail,
     curOldi = aTail
   let d = diff.length - 1
