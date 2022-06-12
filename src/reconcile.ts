@@ -19,6 +19,7 @@ import { commit } from './commit'
 let currentFiber: IFiber
 let finish = null
 let effect = null
+let rendered = false
 
 export const enum LANE {
   UPDATE = 1 << 1,
@@ -67,6 +68,7 @@ const capture = (WIP: IFiber): IFiber | undefined => {
   if (WIP.isNode) {
     WIP.isComp = false;
     updateNode(WIP)
+
   } else {
     WIP.isComp ? updateHook(WIP) : updateHost(WIP)
   }
@@ -101,46 +103,47 @@ const shouldUpdate = (a, b) => {
   for (let i in b) if (a[i] !== b[i]) return true
 }
 
+let count = 0
 const updateHook = <P = Attributes>(WIP: IFiber): any => {
   resetCursor()
   currentFiber = WIP
   let children = (WIP.type as FC<P>)(WIP.props)
   diffKids(WIP, simpleVnode(children))
+  if (count == 5) { throw new Error('THIS') }
+  if (WIP.props.THIS === "THIS") { count++ }
+
 }
-
-
-
-
-
 
 
 const updateNode = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
+  currentFiber = WIP
   var firstRender = false
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
+    WIP.node.test = {}
     firstRender = true;
     // const renderChildren = arrayfy(WIP.node._render())
     // if (renderChildren?.[0].type) {
-      //   renderChildren[0].parent = WIP
-      //   console.log(renderChildren)
-      // }
-      // WIP.node.renderChildren = renderChildren
-      // WIP.props.children = renderChildren
-    }
-    WIP.node.fiber = WIP
-  
-  
+    //   renderChildren[0].parent = WIP
+    //   console.log(renderChildren)
+    // }
+    // WIP.node.renderChildren = renderChildren
+    // WIP.props.children = renderChildren
+  }
+
+  WIP.node.fiber = WIP
+
   const AAAA = WIP.node._render()
   let vnode = simpleVnode(AAAA)
-  vnode.parent = WIP
-  console.log(vnode)
+  //vnode.parent = WIP
+  console.log('VNODE: ', vnode)
 
   // console.log(renderChildren)
-  //WIP.props.children = renderChildren
-  WIP.childNodes = Array.from(WIP.node.get_children() || [])
-  //if (!firstRender) throw new Error('renderChildren')
+  //WIP.props.children = vnode
+  //WIP.childNodes = Array.from(WIP.node.get_children() || [])
   diffKids(WIP, vnode)
+  if (!firstRender) throw new Error('renderChildren')
 }
 
 

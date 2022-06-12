@@ -38,14 +38,15 @@ export const updateElement = <P extends Attributes>(
       name = name.slice(3).toLowerCase() as Extract<keyof P, string>
       if (a) {
         console.log('________________________')
-        console.log(a, name)
-        console.log(typeof name)
-        console.log(typeof a)
+        console.log(a, b, name)
+        console.log(a == b)
+        console.log(a === b)
         console.log(dom)
         console.log('________________________')
         //console.log(dom.is_connected(name, dom, a))
         dom.disconnect(name,  a)
         console.log('************************')
+        //throw new Error('test')
       }
       dom.connect(name, b);
     }
