@@ -132,10 +132,9 @@ const updateNode = (WIP: IFiber): void => {
     firstRender = true;
   }
   
-  WIP.after = WIP.parentNode['prev']
-  WIP.parentNode['prev'] = WIP.node
-  // @ts-ignore
-  WIP.node['prev'] = null
+  WIP.after = WIP.parentNode['prev'];
+  WIP.parentNode['prev'] = WIP.node;
+  WIP.node['prev'] = null;
 
   (WIP.node as GodotElementNode).fiber = WIP
   const renderResult = (WIP.node as GodotElementNode)._render()
