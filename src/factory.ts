@@ -36,26 +36,10 @@ const tagMap = {
    'vseperator': godot.VSeparator,
 }
 
-
-
-
 function factory(tag: string, anchor : number = null, size = null) : GodotElement {
    //create a new godot node
   // console.log('NEW: ', tag)
-   const newDom: GodotElement = new tagMap[tag]()
-
-   //we handle styling
-   if (anchor) {
-      newDom.set_anchors_preset(anchor)
-   }
-   if (size) {
-      if (typeof size.width === 'number') {
-         newDom.set_h_size_flags(size.width)
-      }
-      if (typeof size.height === 'number') {
-         newDom.set_v_size_flags(size.height)
-      }
-   }
+   const newDom: GodotElement = new (tagMap[tag] || godot.Control )()
 
    return newDom;
 }
