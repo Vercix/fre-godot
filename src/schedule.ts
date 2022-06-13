@@ -37,7 +37,7 @@ const flush = (): void => {
 }
 
 export const shouldYield = (): boolean => {
-  const pending = getTime() >= deadline
+  const pending = false// getTime() >= deadline
   postTask = task(pending)
   return pending
 }
