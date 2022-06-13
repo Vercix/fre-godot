@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IFiber, IRef } from './type'
 import { updateElement } from './dom'
 import { isFn, LANE } from './reconcile'
@@ -18,7 +19,15 @@ const insert = (fiber: IFiber): void => {
     updateElement(fiber.node, fiber.oldProps || {}, fiber.props)
   }
   if (fiber.lane & LANE.INSERT) {
-    fiber.parentNode.insertBefore(fiber.node, fiber.after)
+    // if (fiber.node.get_parent()) {
+    //   fiber.node.get_parent().remove_child(fiber.node)
+    // }
+    if (fiber.after) {
+      fiber.parentNode.add_child(fiber.node, true)
+      fiber.parentNode.move_child(fiber.node, Math.max(0, fiber.after.get_index()))
+    } else {
+      fiber.parentNode.add_child(fiber.node, true)
+    }
   }
   refer(fiber.ref, fiber.node)
 }
@@ -43,7 +52,8 @@ const remove = d => {
     d.kids.forEach(remove)
   } else {
     kidsRefer(d.kids)
-    d.parentNode.removeChild(d.node)
+    d.parentNode.remove_child(d.node)
+    d.node.queue_free()
     refer(d.ref, null)
   }
 }

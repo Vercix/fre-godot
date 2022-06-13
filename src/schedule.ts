@@ -19,7 +19,11 @@ const task = (pending: boolean) => {
     port1.onmessage = flush
     return () => port2.postMessage(null)
   }
-  return () => setTimeout(flush)
+  return  async () => {
+    // @ts-ignore
+    await godot.yield(godot.Engine.get_main_loop(), godot.SceneTree.idle_frame);
+    flush();
+  } 
 }
 
 let postTask = task(false)
@@ -38,4 +42,5 @@ export const shouldYield = (): boolean => {
   return pending
 }
 
-export const getTime = () => performance.now()
+// @ts-ignore
+export const getTime = () => godot.OS.get_ticks_msec() 

@@ -1,5 +1,10 @@
+// @ts-nocheck
 import { Attributes, DOM, IFiber } from './type'
 import { isStr, LANE } from './reconcile'
+
+//godot
+import factory from './factory'
+
 
 const defaultObj = {} as const
 
@@ -20,36 +25,39 @@ export const updateElement = <P extends Attributes>(
 ) => {
   jointIter(aProps, bProps, (name, a, b) => {
     if (a === b || name === 'children') {
+
     } else if (name === 'style' && !isStr(b)) {
       jointIter(a, b, (styleKey, aStyle, bStyle) => {
         if (aStyle !== bStyle) {
-          ;(dom as any)[name][styleKey] = bStyle || ''
+          dom.set(styleKey, bStyle)
         }
       })
-    } else if (name[0] === 'o' && name[1] === 'n') {
-      name = name.slice(2).toLowerCase() as Extract<keyof P, string>
-      if (a) dom.removeEventListener(name, a)
-      dom.addEventListener(name, b)
-    } else if (name in dom && !(dom instanceof SVGElement)) {
-      ;(dom as any)[name] = b || ''
-    } else if (b == null || b === false) {
+    } else if (name[0] === 'o' && name[1] === 'n' && name[2] === '_') {
+      name = name.slice(3).toLowerCase() as Extract<keyof P, string>
+      if (a) {
+        try {
+          dom.disconnect(name, a)
+          a['connected'] = false
+        } catch (e) {
+          console.log(e)
+        }
+      }
+      if(!b['connected']){
+        dom.connect(name, b);
+        b['connected'] = true
+      }
+    }
+    else if (b == null || b === false) {
       dom.removeAttribute(name)
     } else {
-      dom.setAttribute(name, b)
+      dom.set(name, b)
     }
   })
 }
 
 export const createElement = <P = Attributes>(fiber: IFiber) => {
-  const dom =
-    fiber.type === ''
-      ? document.createTextNode('')
-      : fiber.lane & LANE.SVG
-      ? document.createElementNS(
-          'http://www.w3.org/2000/svg',
-          fiber.type as string
-        )
-      : document.createElement(fiber.type as string)
+  // @ts-ignore
+  const dom: GodotElement = factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   updateElement(dom as DOM, {} as P, fiber.props as P)
   return dom
 }
