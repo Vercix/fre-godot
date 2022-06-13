@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { IFiber, IRef } from './type'
+import { IFiber, IRef, GodotElement } from './type'
 import { updateElement } from './dom'
 import { isFn, LANE } from './reconcile'
 
@@ -32,9 +31,9 @@ const insert = (fiber: IFiber): void => {
   refer(fiber.ref, fiber.node)
 }
 
-const refer = (ref: IRef, dom?: HTMLElement): void => {
+const refer = (ref: IRef, dom?: GodotElement): void => {
   if (ref)
-    isFn(ref) ? ref(dom) : ((ref as { current?: HTMLElement })!.current = dom)
+    isFn(ref) ? ref(dom) : ((ref as { current?: GodotElement })!.current = dom)
 }
 
 const kidsRefer = (kids: any): void => {

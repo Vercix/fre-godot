@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { Attributes, DOM, IFiber } from './type'
+import { Attributes, DOM, IFiber, GodotElement} from './type'
 import { isStr, LANE } from './reconcile'
 
 //godot
@@ -17,7 +16,6 @@ const jointIter = <P extends Attributes>(
   Object.keys(aProps).forEach(k => callback(k, aProps[k], bProps[k]))
   Object.keys(bProps).forEach(k => callback(k, undefined, bProps[k]))
 }
-
 
 const createTheme = (themeProps) => {
 
@@ -57,7 +55,7 @@ const createTheme = (themeProps) => {
 }
 
 export const updateElement = <P extends Attributes>(
-  dom: DOM,
+  dom: GodotElement,
   aProps: P,
   bProps: P
 ) => {
@@ -116,6 +114,6 @@ export const createElement = <P = Attributes>(fiber: IFiber) => {
   // @ts-ignore
   const dom: GodotElement = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   handleAnchor(dom, fiber?.props?.anchor, fiber?.props?.size)
-  updateElement(dom as DOM, {} as P, fiber.props as P)
+  updateElement(dom as GodotElement, {} as P, fiber.props as P)
   return dom
 }

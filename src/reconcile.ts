@@ -1,10 +1,11 @@
-// @ts-nocheck
 import {
   IFiber,
   FreElement,
   FC,
   Attributes,
-  HTMLElementEx,
+  GodotElement,
+  GodotElementEx,
+  GodotElementNode,
   FreNode,
   IEffect,
 } from './type'
@@ -30,7 +31,7 @@ export const enum LANE {
   NOWORK = 1 << 7,
 }
 
-export const render = (vnode: FreElement, node: Node, config?: any): void => {
+export const render = (vnode: FreElement, node: GodotElement, config?: any): void => {
   const rootFiber = {
     node,
     props: { children: vnode },
@@ -113,7 +114,7 @@ const updateHost = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
   if (!WIP.node) {
     if (WIP.type === 'svg') WIP.lane |= LANE.SVG
-    WIP.node = createElement(WIP) as HTMLElementEx
+    WIP.node = createElement(WIP) as GodotElementEx
   }
   WIP.after = WIP.parentNode['prev']
   WIP.parentNode['prev'] = WIP.node
@@ -128,24 +129,24 @@ const updateNode = (WIP: IFiber): void => {
   var firstRender = false
   if (!WIP.node) {
     WIP.node = createElement(WIP) as GodotElementEx
-    WIP.node.test = {}
     firstRender = true;
   }
-
+  
   WIP.after = WIP.parentNode['prev']
   WIP.parentNode['prev'] = WIP.node
+  // @ts-ignore
   WIP.node['prev'] = null
 
-  WIP.node.fiber = WIP
-  const AAAA = WIP.node._render()
-  let vnode = simpleVnode(AAAA)
+  (WIP.node as GodotElementNode).fiber = WIP
+  const renderResult = (WIP.node as GodotElementNode)._render()
+  let vnode = simpleVnode(renderResult)
   diffKids(WIP, vnode)
 }
 
 const simpleVnode = (type: any) =>
   isStr(type) ? createText(type as string) : type
 
-const getParentNode = (WIP: IFiber): HTMLElement | undefined => {
+const getParentNode = (WIP: IFiber): GodotElement | undefined => {
   while ((WIP = WIP.parent)) {
     if (!WIP.isComp) return WIP.node
   }

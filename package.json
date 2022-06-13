@@ -41,6 +41,7 @@
     "web",
     "ui-library"
   ],
+  "types": "godot.d.ts",
   "author": "132yse",
   "license": "MIT",
   "devDependencies": {
