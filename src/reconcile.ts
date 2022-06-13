@@ -64,14 +64,14 @@ const capture = (WIP: IFiber): IFiber | undefined => {
   WIP.isComp = isFn(WIP.type)
 
   // @TODO fix this. needed for class implementation for now
-  WIP.isNode = isNode(WIP.type)
-  if (WIP.isNode) {
-    WIP.isComp = false;
-    updateNode(WIP)
+  // WIP.isNode = isNode(WIP.type)
+  // if (WIP.isNode) {
+  //   WIP.isComp = false;
+  //   updateNode(WIP)
 
-  } else {
-    WIP.isComp ? updateHook(WIP) : updateHost(WIP)
-  }
+  // } else {
+  WIP.isComp ? updateHook(WIP) : updateHost(WIP)
+  // }
 
   if (WIP.child) return WIP.child
   while (WIP) {
@@ -92,7 +92,11 @@ const bubble = WIP => {
       side(WIP.hooks.layout)
       schedule(() => side(WIP.hooks.effect))
     }
-  } else {
+  } else if (WIP.isNode) {
+    effect.e = WIP
+    effect = WIP
+  }
+  else {
     effect.e = WIP
     effect = WIP
   }
@@ -109,52 +113,8 @@ const updateHook = <P = Attributes>(WIP: IFiber): any => {
   currentFiber = WIP
   let children = (WIP.type as FC<P>)(WIP.props)
   diffKids(WIP, simpleVnode(children))
-  if (count == 5) { throw new Error('THIS') }
-  if (WIP.props.THIS === "THIS") { count++ }
 
 }
-
-
-const updateNode = (WIP: IFiber): void => {
-  WIP.parentNode = (getParentNode(WIP) as any) || {}
-  currentFiber = WIP
-  var firstRender = false
-  if (!WIP.node) {
-    WIP.node = createElement(WIP) as GodotElementEx
-    WIP.node.test = {}
-    firstRender = true;
-    // const renderChildren = arrayfy(WIP.node._render())
-    // if (renderChildren?.[0].type) {
-    //   renderChildren[0].parent = WIP
-    //   console.log(renderChildren)
-    // }
-    // WIP.node.renderChildren = renderChildren
-    // WIP.props.children = renderChildren
-  }
-
-  WIP.node.fiber = WIP
-
-  const AAAA = WIP.node._render()
-  let vnode = simpleVnode(AAAA)
-  //vnode.parent = WIP
-  console.log('VNODE: ', vnode)
-
-  // console.log(renderChildren)
-  //WIP.props.children = vnode
-  //WIP.childNodes = Array.from(WIP.node.get_children() || []
-  
-  console.log('_____________DIFF KIDS__________________')
-  diffKids(WIP, vnode)
-  console.log('update',LANE.UPDATE)
-  console.log('insert', LANE.INSERT)
-  console.log('remove',LANE.REMOVE)
-  if (!firstRender) throw new Error('renderChildren')
-}
-
-
-
-
-
 
 const updateHost = (WIP: IFiber): void => {
   WIP.parentNode = (getParentNode(WIP) as any) || {}
@@ -162,6 +122,17 @@ const updateHost = (WIP: IFiber): void => {
     WIP.node = createElement(WIP) as GodotElementEx
   }
   // @ts-ignore
+  WIP.childNodes = Array.from(WIP.node.get_children() || [])
+  diffKids(WIP, WIP.props.children)
+}
+
+const updateNode = (WIP: IFiber): void => {
+  WIP.parentNode = (getParentNode(WIP) as any) || {}
+  if (!WIP.node) {
+    WIP.node = createElement(WIP) as GodotElementEx
+    WIP.node.fiber = getCurrentFiber()
+  }
+
   WIP.childNodes = Array.from(WIP.node.get_children() || [])
   diffKids(WIP, WIP.props.children)
 }
@@ -174,6 +145,7 @@ const getParentNode = (WIP: IFiber): GodotElement | undefined => {
     if (!WIP.isComp) return WIP.node
   }
 }
+
 
 const diffKids = (WIP: any, children: FreNode): void => {
   let aCh = WIP.kids || [],
@@ -194,33 +166,24 @@ const diffKids = (WIP: any, children: FreNode): void => {
   }
 
   // LCS
-  console.log('(((((((')
-  console.log(aCh)
-  console.log(bCh)
   const { diff, keymap } = lcs(bCh, aCh, bHead, bTail, aHead, aTail)
   let len = diff.length
-  console.log(diff)
 
   for (let i = 0, aIndex = aHead, bIndex = bHead, mIndex; i < len; i++) {
     const op = diff[i]
-    console.log('op', op)
     if (op === LANE.UPDATE) {
       if (!same(aCh[aIndex], bCh[bIndex])) {
-        console.log('insert ^^ remove')
         bCh[bIndex].lane = LANE.INSERT
         aCh[aIndex].lane = LANE.REMOVE
         effect.e = aCh[aIndex]
         effect = aCh[aIndex]
       } else {
-        console.log('clone')
         clone(aCh[aIndex], bCh[bIndex], LANE.UPDATE)
       }
 
       aIndex++
       bIndex++
     } else if (op === LANE.INSERT) {
-      //here the index of current fiber is checked
-
       let c = bCh[bIndex]
       mIndex = c.key != null ? keymap[c.key] : null
       if (mIndex != null) {
@@ -308,9 +271,6 @@ function lcs(
   let newLen = bArr.length
   let oldLen = aArr.length
   let minLen = Math.min(newLen, oldLen)
-  console.log(minLen) 
-  console.log(bArr) 
-  console.log(aArr) 
   let tresh = Array(minLen + 1)
   tresh[0] = -1
 
@@ -346,7 +306,6 @@ function lcs(
 
   let ptr = link[k]
   let diff = Array(oldLen + newLen - k)
-  console.log(oldLen + newLen - k)
   let curNewi = bTail,
     curOldi = aTail
   let d = diff.length - 1

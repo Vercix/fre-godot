@@ -4,6 +4,7 @@ import { IFiber, IRef, GodotElement } from './type'
 import { updateElement } from './dom'
 import { isFn, LANE } from './reconcile'
 
+var x = 0
 export const commit = (fiber: IFiber): void => {
   let e = fiber.e
   fiber.e = null
@@ -13,7 +14,7 @@ export const commit = (fiber: IFiber): void => {
 }
 
 const insert = (fiber: IFiber): void => {
-  
+
   if (fiber.lane === LANE.REMOVE) {
     remove(fiber)
     return
@@ -38,7 +39,7 @@ const insert = (fiber: IFiber): void => {
 }
 
 const refer = (ref: IRef, dom?: GodotElement): void => {
-  
+
   if (ref)
     isFn(ref) ? ref(dom) : ((ref as { current?: GodotElement })!.current = dom)
 }
@@ -57,6 +58,7 @@ const remove = d => {
   } else {
     kidsRefer(d.kids)
     d.parentNode.remove_child(d.node)
+    d.node.queue_free()
     refer(d.ref, null)
   }
 }

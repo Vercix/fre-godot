@@ -6,6 +6,9 @@ import { isStr, LANE } from './reconcile'
 //godot
 import factory from './factory'
 
+
+var anonFuncID = 0;
+var domFuncID = 0;
 const defaultObj = {} as const
 
 const jointIter = <P extends Attributes>(
@@ -37,16 +40,11 @@ export const updateElement = <P extends Attributes>(
     } else if (name[0] === 'o' && name[1] === 'n' && name[2] === '_') {
       name = name.slice(3).toLowerCase() as Extract<keyof P, string>
       if (a) {
-        console.log('________________________')
-        console.log(a, b, name)
-        console.log(a == b)
-        console.log(a === b)
-        console.log(dom)
-        console.log('________________________')
-        //console.log(dom.is_connected(name, dom, a))
-        dom.disconnect(name,  a)
-        console.log('************************')
-        //throw new Error('test')
+        try {
+          dom.disconnect(name, a)
+        } catch (e) {
+          console.log(e)
+        }
       }
       dom.connect(name, b);
     }
@@ -68,7 +66,7 @@ export const createElement = <P = Attributes>(fiber: IFiber) => {
   //         fiber.type as string
   //       )
   //     : document.createElement(fiber.type as string)
-  const dom : GodotElement = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
+  const dom: GodotElement = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   updateElement(dom as DOM, {} as P, fiber.props as P)
   return dom
 }
