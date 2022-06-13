@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   IFiber,
   FreElement,
@@ -63,7 +64,19 @@ const reconcile = (WIP?: IFiber): boolean => {
 
 const capture = (WIP: IFiber): IFiber | undefined => {
   WIP.isComp = isFn(WIP.type)
-  WIP.isComp ? updateHook(WIP) : updateHost(WIP)
+
+  // @TODO fix this. needed for class implementation for now
+  WIP.isNode = isNode(WIP.type)
+  if (WIP.isNode) {
+    WIP.isComp = false;
+    updateNode(WIP)
+
+  } else {
+    WIP.isComp ? updateHook(WIP) : updateHost(WIP)
+  }
+
+
+  
   if (WIP.child) return WIP.child
   while (WIP) {
     bubble(WIP)
@@ -107,6 +120,26 @@ const updateHost = (WIP: IFiber): void => {
   WIP.node['prev'] = null
 
   diffKids(WIP, WIP.props.children)
+}
+
+const updateNode = (WIP: IFiber): void => {
+  WIP.parentNode = (getParentNode(WIP) as any) || {}
+  currentFiber = WIP
+  var firstRender = false
+  if (!WIP.node) {
+    WIP.node = createElement(WIP) as GodotElementEx
+    WIP.node.test = {}
+    firstRender = true;
+  }
+
+  WIP.after = WIP.parentNode['prev']
+  WIP.parentNode['prev'] = WIP.node
+  WIP.node['prev'] = null
+
+  WIP.node.fiber = WIP
+  const AAAA = WIP.node._render()
+  let vnode = simpleVnode(AAAA)
+  diffKids(WIP, vnode)
 }
 
 const simpleVnode = (type: any) =>
@@ -276,5 +309,6 @@ const bs = (seq, n) => {
 
 export const getCurrentFiber = () => currentFiber || null
 export const isFn = (x: any): x is Function => typeof x === 'function'
+export const isNode = (x: any) => typeof x === 'function' && /^\s*class\s+/.test(x.toString());
 export const isStr = (s: any): s is number | string =>
   typeof s === 'number' || typeof s === 'string'

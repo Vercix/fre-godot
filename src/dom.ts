@@ -48,7 +48,7 @@ export const updateElement = <P extends Attributes>(
       }
     }
     else if (b == null || b === false) {
-      dom.removeAttribute(name)
+      //dom.removeAttribute(name)
     } else {
       dom.set(name, b)
     }
@@ -57,7 +57,7 @@ export const updateElement = <P extends Attributes>(
 
 export const createElement = <P = Attributes>(fiber: IFiber) => {
   // @ts-ignore
-  const dom: GodotElement = factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
+  const dom: GodotElement = fiber.isNode ? new fiber.type() : factory(fiber.type, fiber?.props?.anchor, fiber?.props?.size)
   updateElement(dom as DOM, {} as P, fiber.props as P)
   return dom
 }
