@@ -197,5 +197,5 @@ const theme = {
 	},
 }
 
-<button theme={theme} on_pressed={someFunction} />
+<label theme={theme} />
 ```
