@@ -119,6 +119,8 @@ export default class TestClass extends godot.Control {
 Most tags are not mapped to a different name. I did however map HBoxContainer and VBoxContainer to hbox and vbox respectivly.
 
 ### Current List:
+<div align="center">
+<br>
 
 | Tag             | Godot Class     |
 |-----------------|-----------------|
@@ -146,11 +148,10 @@ Most tags are not mapped to a different name. I did however map HBoxContainer an
 | colorpicker     | ColorPicker     |
 | hseperator      | HSeparator      |
 | vseperator      | VSeparator      |
+</div>
 
-<br>
 
-## Godot Properties
-<br>
+## Properties
 
 You can set node properties through props.
 
@@ -160,7 +161,7 @@ Like so:
 <label text={'text'} />
 ```
 
-## Godot Signals
+## Signals
 <br>
 
 Godot signals are the equivalent of dom event listeners.
@@ -176,4 +177,25 @@ Instead of:
 
 ```js
 <button onPressed={someFunction} />
+```
+
+## Theme
+
+There is a rudementry implementation of themes. 
+
+**Note: StyleBox is not implemented.**
+
+The following example will produce a Label node with red text:
+
+```js
+const theme = {
+	Label:
+	{
+		color: {
+			font_color: new godot.Color(1, 0, 0)
+		}
+	},
+}
+
+<button theme={theme} on_pressed={someFunction} />
 ```
