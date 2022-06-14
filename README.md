@@ -87,7 +87,7 @@ function App() {
   (
     <hbox>
       <label text={`${count}`} />
-      <button on_pressed_={() => setCount(count + 1)} text={`+`} />
+      <button on_pressed={() => setCount(count + 1)} text={`+`} />
     </hbox>
   )
 }
