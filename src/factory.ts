@@ -15,6 +15,7 @@ const tagMap = {
    'tabcontainer': godot.TabContainer,
    'gridcontainer': godot.GridContainer,
    'scrollcontainer': godot.ScrollContainer,
+   'centercontainer': godot.CenterContainer,
 
    //buttons
    'button': godot.Button,
