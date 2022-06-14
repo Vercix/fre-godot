@@ -153,8 +153,8 @@ Most tags are not mapped to a different name. I did however map HBoxContainer an
 
 ## Properties
 
-You can set node properties through props.
-
+You can set node properties through props.  
+They use snake case naming convention.  
 Like so:
 
 ```js
@@ -164,7 +164,7 @@ Like so:
 ## Signals
 <br>
 
-Godot signals are the equivalent of dom event listeners.
+Godot signals are the equivalent of dom event listeners.  
 They use snake case naming convention.
 
 Use the following:
