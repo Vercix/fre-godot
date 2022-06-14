@@ -1,6 +1,6 @@
 {
-  "name": "fre",
-  "version": "2.4.0",
+  "name": "fre-godot",
+  "version": "0.0.2",
   "type": "module",
   "main": "dist/fre.js",
   "unpkg": "dist/fre.umd.js",
@@ -30,7 +30,7 @@
     "dev": "cd demo && yarn dev",
     "prepublishOnly": "yarn build"
   },
-  "description": "Tiny Concurrent UI library with Fiber.",
+  "description": "Tiny Concurrent UI library with Fiber. For Godot with Javascript bindings.",
   "keywords": [
     "fre",
     "frontend",
@@ -42,7 +42,7 @@
     "ui-library"
   ],
   "types": "godot.d.ts",
-  "author": "132yse",
+  "author": "Vercix",
   "license": "MIT",
   "devDependencies": {
     "@skypack/package-check": "^0.2.2",
@@ -59,7 +59,6 @@
     "yarpm": "^0.2.1",
     "zora": "4.0.2"
   },
-  "repository": "yisar/fre",
-  "homepage": "https://fre.js.org",
+  "repository": "Vercix/fre-godot",
   "dependencies": {}
 }
