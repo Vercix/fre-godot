@@ -19,7 +19,6 @@ const jointIter = <P extends Attributes>(
 
 const createTheme = (themeProps) => {
 
-  console.log("create theme")
   const theme = new godot.Theme()
   Object.keys(themeProps).forEach(
     node_type => {
@@ -29,13 +28,10 @@ const createTheme = (themeProps) => {
             case 'constant':
               Object.keys(themeProps[node_type][type]).forEach(
                 key => {
-                  console.log(node_type, type, key, themeProps[node_type][type][key])
                   theme.set_constant(key, node_type, themeProps[node_type][type][key])}
               )
               break;
             case 'color':
-              console.log("color")
-              console.log(node_type)
               Object.keys(themeProps[node_type][type]).forEach(
                 key => theme.set_color(key, node_type, themeProps[node_type][type][key])
               )
@@ -64,8 +60,6 @@ export const updateElement = <P extends Attributes>(
 
     } else if (name === 'theme' && !isStr(b)) {
       dom.set_theme( createTheme(b))
-      console.log(dom instanceof godot.BoxContainer)
-      console.log("set theme")
       // jointIter(a, b, (styleKey, aStyle, bStyle) => {
       //   if (aStyle !== bStyle) {
       //     dom.set(styleKey, bStyle)

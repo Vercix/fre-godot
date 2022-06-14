@@ -1,6 +1,6 @@
 {
   "name": "fre-godot",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "type": "module",
   "main": "dist/fre.js",
   "unpkg": "dist/fre.umd.js",
