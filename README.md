@@ -24,6 +24,7 @@ In no particular order.
 - [ ] Better integration between GDScript and JSX classes. Not sure how as this probably requires modification of the ECMAScript module or Godot it self. 
 - [ ] (Re)implement concurrent rendering.
 - [ ] Implement text nodes, maybe.
+- [ ] Create proper api and integration for classes.
 
 <br>
 
@@ -75,21 +76,41 @@ function App() {
 
 ### Classes
 
-You can also use classes.
+**Note: These are not stable yet.**  
+
+You can also use classes.  
+ 
+They need to inherit from a Control derived class. 
+Fiber is set by Fre right after instantiation. You can access props through that member.
 
 ```js
 //App.jsx
-import { render, useState } from 'fre-godot'
+import { IFiber } from 'fre-godot'
 
-function App() {
-  const [count, setCount] = useState(0)
-  return 
-  (
-    <hbox>
-      <label text={`${count}`} />
-      <button on_pressed={() => setCount(count + 1)} text={`+`} />
-    </hbox>
-  )
+export default class TestClass extends godot.Control {
+
+    //fre
+    fiber: IFiber = null;
+
+    constructor() {
+        super();
+    }
+
+    _enter_tree() {
+    }
+
+    _ready() {
+    }
+
+    _render() {
+        return (
+            <vbox>
+                <label text="Test Class Comp" />
+                {this.fiber.props.children}
+            </vbox>
+        )
+    }
+
 }
 ```
 
